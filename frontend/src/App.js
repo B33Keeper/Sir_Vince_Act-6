@@ -4,6 +4,7 @@ import MovieList from './components/MovieList';
 import ReviewForm from './components/ReviewForm';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
+import MovieDetailModal from './components/MovieDetailModal';
 import { getMovies } from './services/movieService';
 
 function App() {
@@ -13,6 +14,8 @@ function App() {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showMovieDetail, setShowMovieDetail] = useState(false);
+  const [wasDetailOpen, setWasDetailOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -113,10 +116,20 @@ function App() {
     }
   };
 
-  const handleReviewAdded = () => {
-    fetchMovies();
+  const handleReviewAdded = async () => {
+    await fetchMovies();
     setShowReviewForm(false);
+  };
+
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+    setShowMovieDetail(true);
+  };
+
+  const handleCloseMovieDetail = () => {
+    setShowMovieDetail(false);
     setSelectedMovie(null);
+    setWasDetailOpen(false);
   };
 
   const handleSearch = (e) => {
@@ -269,21 +282,65 @@ function App() {
           </div>
         )}
 
+        {/* Movie Detail Modal */}
+        {showMovieDetail && selectedMovie && (
+          <MovieDetailModal
+            movie={selectedMovie}
+            onClose={handleCloseMovieDetail}
+            onAddReview={(movie) => {
+              if (!currentUser) {
+                alert('Please log in to add a review!');
+                handleCloseMovieDetail();
+                openLogin();
+                return;
+              }
+              // Track that detail modal was open
+              setWasDetailOpen(true);
+              setSelectedMovie(movie);
+              setShowMovieDetail(false);
+              setShowReviewForm(true);
+            }}
+          />
+        )}
+
         {/* Review Form Modal */}
         {showReviewForm && selectedMovie && (
           <div className="modal-overlay" onClick={() => {
             setShowReviewForm(false);
-            setSelectedMovie(null);
+            // If detail modal was open, keep selectedMovie; otherwise clear it
           }}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <ReviewForm
                 movieId={selectedMovie.id}
                 movieTitle={selectedMovie.title}
                 currentUser={currentUser}
-                onSubmit={handleReviewAdded}
+                onSubmit={async () => {
+                  setShowReviewForm(false);
+                  // Refresh all movies
+                  await fetchMovies();
+                  // Get updated movie data with fresh reviews
+                  const data = await getMovies();
+                  const updatedMovie = data.find(m => m.id === selectedMovie.id);
+                  if (updatedMovie) {
+                    setSelectedMovie(updatedMovie);
+                    // If detail modal was open before, reopen it with fresh data
+                    if (wasDetailOpen) {
+                      setShowMovieDetail(true);
+                      setWasDetailOpen(false);
+                    }
+                  } else {
+                    setWasDetailOpen(false);
+                  }
+                }}
                 onCancel={() => {
                   setShowReviewForm(false);
-                  setSelectedMovie(null);
+                  // If detail modal was open, reopen it
+                  if (wasDetailOpen) {
+                    setShowMovieDetail(true);
+                    setWasDetailOpen(false);
+                  } else {
+                    setSelectedMovie(null);
+                  }
                 }}
               />
             </div>
@@ -431,6 +488,7 @@ function App() {
             ) : (
               <MovieList
                 movies={filteredMovies}
+                onMovieClick={handleMovieClick}
                 onAddReview={(movie) => {
                   if (!currentUser) {
                     alert('Please log in to add a review!');
