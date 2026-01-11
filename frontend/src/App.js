@@ -10,6 +10,7 @@ import { getMovies } from './services/movieService';
 function App() {
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
+  const [filteredTVShows, setFilteredTVShows] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -19,8 +20,10 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchType, setSearchType] = useState('MOVIE'); // 'MOVIE' or 'TV SHOW'
   const [currentUser, setCurrentUser] = useState(null);
   const [activeFilter, setActiveFilter] = useState('POPULAR');
+  const [activeTVFilter, setActiveTVFilter] = useState('POPULAR');
 
   useEffect(() => {
     fetchMovies();
@@ -32,23 +35,31 @@ function App() {
   }, []);
 
   useEffect(() => {
-    let filtered = [...movies];
+    // Separate movies and TV shows
+    const moviesOnly = movies.filter(item => !item.type || item.type === 'movie');
+    const tvShowsOnly = movies.filter(item => item.type === 'tvshow');
 
-    // Apply search filter first
+    // Filter and sort movies
+    let filtered = [...moviesOnly];
     if (searchQuery.trim() !== '') {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (movie) =>
-          movie.title.toLowerCase().includes(query) ||
-          movie.director.toLowerCase().includes(query) ||
-          (movie.description && movie.description.toLowerCase().includes(query))
-      );
+      if (searchType === 'MOVIE') {
+        // Only search in movies
+        const query = searchQuery.toLowerCase();
+        filtered = filtered.filter(
+          (movie) =>
+            movie.title.toLowerCase().includes(query) ||
+            movie.director.toLowerCase().includes(query) ||
+            (movie.description && movie.description.toLowerCase().includes(query))
+        );
+      } else {
+        // If searching for TV SHOW, hide movies
+        filtered = [];
+      }
     }
 
-    // Apply category filter
+    // Apply category filter for movies
     switch (activeFilter) {
       case 'POPULAR':
-        // Sort by number of reviews (most popular = most reviews)
         filtered.sort((a, b) => {
           const reviewsA = a.reviews?.length || 0;
           const reviewsB = b.reviews?.length || 0;
@@ -57,21 +68,17 @@ function App() {
         break;
       
       case 'COMING SOON':
-        // Sort by release year (newest first, future releases at top)
         filtered.sort((a, b) => {
           const currentYear = new Date().getFullYear();
           const yearA = a.releaseYear || 0;
           const yearB = b.releaseYear || 0;
-          // Future releases first (if any), then newest releases
           if (yearA > currentYear && yearB <= currentYear) return -1;
           if (yearA <= currentYear && yearB > currentYear) return 1;
-          // Both in future or both in past - sort by year descending
           return yearB - yearA;
         });
         break;
       
       case 'TOP RATED':
-        // Sort by average rating (highest first)
         filtered.sort((a, b) => {
           const ratingA = parseFloat(a.averageRating) || 0;
           const ratingB = parseFloat(b.averageRating) || 0;
@@ -80,27 +87,84 @@ function App() {
         break;
       
       case 'MOST REVIEWED':
-        // Sort by number of reviews (most reviewed first)
         filtered.sort((a, b) => {
           const reviewsA = a.reviews?.length || 0;
           const reviewsB = b.reviews?.length || 0;
           if (reviewsB !== reviewsA) {
             return reviewsB - reviewsA;
           }
-          // If same number of reviews, sort by rating
+          const ratingA = parseFloat(a.averageRating) || 0;
+          const ratingB = parseFloat(b.averageRating) || 0;
+          return ratingB - ratingA;
+        });
+        break;
+    }
+
+    setFilteredMovies(filtered);
+
+    // Filter and sort TV shows
+    let filteredTV = [...tvShowsOnly];
+    if (searchQuery.trim() !== '') {
+      if (searchType === 'TV SHOW') {
+        // Only search in TV shows
+        const query = searchQuery.toLowerCase();
+        filteredTV = filteredTV.filter(
+          (show) =>
+            show.title.toLowerCase().includes(query) ||
+            show.director.toLowerCase().includes(query) ||
+            (show.description && show.description.toLowerCase().includes(query))
+        );
+      } else {
+        // If searching for MOVIE, hide TV shows
+        filteredTV = [];
+      }
+    }
+
+    // Apply category filter for TV shows
+    switch (activeTVFilter) {
+      case 'POPULAR':
+        filteredTV.sort((a, b) => {
+          const reviewsA = a.reviews?.length || 0;
+          const reviewsB = b.reviews?.length || 0;
+          return reviewsB - reviewsA;
+        });
+        break;
+      
+      case 'COMING SOON':
+        filteredTV.sort((a, b) => {
+          const currentYear = new Date().getFullYear();
+          const yearA = a.releaseYear || 0;
+          const yearB = b.releaseYear || 0;
+          if (yearA > currentYear && yearB <= currentYear) return -1;
+          if (yearA <= currentYear && yearB > currentYear) return 1;
+          return yearB - yearA;
+        });
+        break;
+      
+      case 'TOP RATED':
+        filteredTV.sort((a, b) => {
           const ratingA = parseFloat(a.averageRating) || 0;
           const ratingB = parseFloat(b.averageRating) || 0;
           return ratingB - ratingA;
         });
         break;
       
-      default:
-        // Default: no sorting or keep original order
+      case 'MOST REVIEWED':
+        filteredTV.sort((a, b) => {
+          const reviewsA = a.reviews?.length || 0;
+          const reviewsB = b.reviews?.length || 0;
+          if (reviewsB !== reviewsA) {
+            return reviewsB - reviewsA;
+          }
+          const ratingA = parseFloat(a.averageRating) || 0;
+          const ratingB = parseFloat(b.averageRating) || 0;
+          return ratingB - ratingA;
+        });
         break;
     }
 
-    setFilteredMovies(filtered);
-  }, [searchQuery, movies, activeFilter]);
+    setFilteredTVShows(filteredTV);
+  }, [searchQuery, searchType, movies, activeFilter, activeTVFilter]);
 
   const fetchMovies = async () => {
     try {
@@ -205,7 +269,11 @@ function App() {
       <div className="search-section">
         <div className="search-container">
           <div className="search-dropdown">
-            <select className="dropdown-select" defaultValue="MOVIE">
+            <select 
+              className="dropdown-select" 
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+            >
               <option value="MOVIE">MOVIE</option>
               <option value="TV SHOW">TV SHOW</option>
             </select>
@@ -249,7 +317,7 @@ function App() {
           <div className="hero-overlay"></div>
         </div>
         <div className="hero-content">
-          <h2 className="now-playing-text">NOW PLAYING</h2>
+          <h2 className="now-playing-text">MOVIE REVIEWS</h2>
         </div>
       </div>
 
@@ -365,9 +433,10 @@ function App() {
         )}
 
         {!loading && !error && (
+          <>
           <div className="movies-section">
             <div className="section-header">
-              <h2 className="section-title">IN THEATER</h2>
+              <h2 className="section-title">MOVIES</h2>
               <div className="section-filters">
                 <button
                   type="button"
@@ -500,6 +569,80 @@ function App() {
               />
             )}
           </div>
+
+          {/* TV Shows Section */}
+          <div className="movies-section" style={{ marginTop: '4rem' }}>
+            <div className="section-header">
+              <h2 className="section-title">TV SHOWS</h2>
+              <div className="section-filters">
+                <button
+                  type="button"
+                  className={`filter-tag ${activeTVFilter === 'POPULAR' ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActiveTVFilter('POPULAR');
+                  }}
+                >
+                  #POPULAR
+                </button>
+                <button
+                  type="button"
+                  className={`filter-tag ${activeTVFilter === 'COMING SOON' ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActiveTVFilter('COMING SOON');
+                  }}
+                >
+                  #COMING SOON
+                </button>
+                <button
+                  type="button"
+                  className={`filter-tag ${activeTVFilter === 'TOP RATED' ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActiveTVFilter('TOP RATED');
+                  }}
+                >
+                  #TOP RATED
+                </button>
+                <button
+                  type="button"
+                  className={`filter-tag ${activeTVFilter === 'MOST REVIEWED' ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActiveTVFilter('MOST REVIEWED');
+                  }}
+                >
+                  #MOST REVIEWED
+                </button>
+              </div>
+            </div>
+            {filteredTVShows.length === 0 ? (
+              <div className="no-movies">
+                <h2>No TV shows found</h2>
+                <p>{searchQuery ? 'Try a different search term or clear filters.' : 'No TV shows available at the moment.'}</p>
+              </div>
+            ) : (
+              <MovieList
+                movies={filteredTVShows}
+                onMovieClick={handleMovieClick}
+                onAddReview={(movie) => {
+                  if (!currentUser) {
+                    alert('Please log in to add a review!');
+                    openLogin();
+                    return;
+                  }
+                  setSelectedMovie(movie);
+                  setShowReviewForm(true);
+                }}
+              />
+            )}
+          </div>
+          </>
         )}
       </main>
     </div>

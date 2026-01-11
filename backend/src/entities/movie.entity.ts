@@ -24,6 +24,9 @@ export class Movie {
   @Column({ type: 'decimal', precision: 3, scale: 2, default: 0 })
   averageRating: number;
 
+  @Column({ default: 'movie' })
+  type: string; // 'movie' or 'tvshow'
+
   @OneToMany(() => Review, (review) => review.movie)
   reviews: Review[];
 }

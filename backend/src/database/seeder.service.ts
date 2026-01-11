@@ -114,6 +114,38 @@ export class SeederService implements OnModuleInit {
         description: 'Following the events of Avengers: Endgame, Spider-Man must step up to take on new threats in a world that has changed forever.',
         imageUrl: '/images/spider-man-far-from-home.jpg',
       },
+      {
+        title: 'Breaking Bad',
+        director: 'Vince Gilligan',
+        releaseYear: 2008,
+        description: 'A high school chemistry teacher turned methamphetamine manufacturer partners with a former student to secure his family\'s financial future as he battles terminal lung cancer.',
+        imageUrl: '/images/tv-breaking-bad.jpg',
+        type: 'tvshow',
+      },
+      {
+        title: 'Game of Thrones',
+        director: 'David Benioff, D.B. Weiss',
+        releaseYear: 2011,
+        description: 'Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns after being dormant for millennia.',
+        imageUrl: '/images/tv-game-of-thrones.jpg',
+        type: 'tvshow',
+      },
+      {
+        title: 'Stranger Things',
+        director: 'The Duffer Brothers',
+        releaseYear: 2016,
+        description: 'When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces and one strange little girl.',
+        imageUrl: '/images/tv-stranger-things.jpg',
+        type: 'tvshow',
+      },
+      {
+        title: 'The Office',
+        director: 'Greg Daniels',
+        releaseYear: 2005,
+        description: 'A mockumentary on a group of typical office workers, where the workday consists of ego clashes, inappropriate behavior, and tedium.',
+        imageUrl: '/images/tv-the-office.jpg',
+        type: 'tvshow',
+      },
     ];
 
     const movieEntities = movies.map((movie) => this.movieRepository.create(movie));

@@ -1,13 +1,16 @@
 import React from 'react';
 import './MovieList.css';
 
-const MovieList = ({ movies, onAddReview, onMovieClick }) => {
+const MovieList = ({ movies, onAddReview, onMovieClick, showEmptyMessage = true }) => {
 
   if (movies.length === 0) {
+    if (!showEmptyMessage) {
+      return null;
+    }
     return (
       <div className="no-movies">
-        <h2>Loading movies...</h2>
-        <p>Please wait while we load the movie catalog.</p>
+        <h2>No items found</h2>
+        <p>There are no items to display at the moment.</p>
       </div>
     );
   }
@@ -81,16 +84,6 @@ const MovieList = ({ movies, onAddReview, onMovieClick }) => {
             >
               <i className="fas fa-plus-circle" style={{ marginRight: '0.5rem' }}></i>
               Add Review
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={(e) => {
-                e.stopPropagation();
-                onMovieClick(movie);
-              }}
-            >
-              <i className="fas fa-info-circle" style={{ marginRight: '0.5rem' }}></i>
-              View Details
             </button>
           </div>
         </div>

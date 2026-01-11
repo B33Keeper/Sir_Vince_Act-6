@@ -1,0 +1,179 @@
+Format ALL content from PROJECT_DOCUMENTATION.md into professional documentation. Use this EXACT format for each section:
+
+[Section Title]:
+
+[Image: Description of what the image should show]
+
+[Paragraph text - 1-2 paragraphs explaining the feature]
+
+---
+
+COMPLETE LIST OF SECTIONS TO CREATE (in this order):
+
+PART 1: FUNCTIONALITY SECTIONS
+1. Home Page Interface:
+2. Sign-Up Functionality:
+3. Login Functionality:
+4. Browsing Movies:
+5. Viewing Movie Details:
+6. Adding a Review:
+7. Searching and Filtering Movies:
+
+PART 2: API CONNECTIVITY TESTING SECTIONS
+8. User Registration (Sign Up):
+9. User Login:
+10. Get All Users:
+11. Get a Single User:
+12. Update a User:
+13. Delete a User:
+14. Get All Movies:
+15. Get a Single Movie:
+16. Create a Review:
+17. Get All Reviews:
+18. Get Reviews for a Specific Movie:
+19. Update a Review:
+20. Delete a Review:
+
+PART 3: PROJECT SETUP GUIDE SECTIONS
+21. Prerequisites:
+22. Installation (One-Time Setup):
+23. Database Setup:
+24. Running the Application:
+25. Stopping the Application:
+
+PART 4: TROUBLESHOOTING SECTIONS (Optional - format as subsections or separate sections as appropriate)
+26. Problem: "Loading movies..." Message Stuck on Screen:
+27. Problem: Port 3001 Already in Use:
+28. Problem: Port 3000 Already in Use (Frontend):
+29. Problem: CORS Errors:
+30. Problem: Database Not Seeding (No Movies Showing):
+31. Problem: Images Not Showing:
+32. Problem: Backend Server Won't Start:
+33. Problem: Frontend Won't Start:
+34. Problem: API Calls Fail:
+35. Testing the API Directly:
+
+FORMATTING RULES:
+- Section title followed by colon, then new line
+- Image placeholder on its own line using format: [Image: Description]
+- Blank line, then 1-2 paragraphs (3-5 sentences each)
+- Use "---" to separate sections
+- Plain text only (NO markdown, NO bullets, NO bold/italic)
+- Professional, clear language for non-technical users
+- For API sections, include endpoint details, methods, URLs, response status codes, and explanations
+- For Setup sections, include step-by-step instructions in paragraph form
+- For Troubleshooting sections, include problem description and solution steps
+
+IMAGE PLACEHOLDER EXAMPLES FOR DIFFERENT SECTIONS:
+
+Functionality Sections:
+- [Image: Homepage showing movie cards in a grid layout with posters, titles, and ratings]
+- [Image: Sign-up form modal with username, email, password fields]
+- [Image: Login form with username and password fields and remember me checkbox]
+- [Image: Movie detail modal showing full information and review list]
+- [Image: Review form with star rating selector and comment text area]
+- [Image: Search bar with filter buttons and search results]
+
+API Sections:
+- [Image: Swagger UI showing the /users endpoint with POST method and request body example]
+- [Image: Swagger UI showing the /users/login endpoint with response example]
+- [Image: Swagger UI showing the /movies endpoint with GET method and response data]
+- [Image: Swagger UI showing the /reviews endpoint with POST method and request body]
+- [Image: API response example showing JSON data structure]
+
+Setup Sections:
+- [Image: Terminal/command prompt showing npm install command running]
+- [Image: Terminal showing backend server starting with success messages]
+- [Image: Terminal showing frontend server starting]
+- [Image: Browser showing the application running on localhost:3000]
+- [Image: Swagger API documentation page open in browser]
+
+Troubleshooting Sections:
+- [Image: Browser console showing error messages]
+- [Image: Terminal showing port conflict error message]
+- [Image: Swagger UI showing API endpoint testing]
+
+CONTENT EXTRACTION INSTRUCTIONS:
+
+1. FUNCTIONALITY SECTIONS (1-7):
+   - Extract from "Steps in Showing Functionality" section
+   - Focus on user-facing features and interactions
+   - Include form fields, buttons, user actions, validation rules
+
+2. API SECTIONS (8-20):
+   - Extract from "API Connectivity Testing" section
+   - Include: Method (GET/POST/PATCH/DELETE), URL, Authentication requirements, Response Status, Response Time, Payload Size
+   - Explain what the endpoint does in simple terms
+   - Include the "What This Does" explanation from the original documentation
+
+3. SETUP SECTIONS (21-25):
+   - Extract from "Project Setup Guide" section
+   - Include prerequisites, installation steps, database setup, running instructions
+   - Convert step-by-step lists into paragraph form while maintaining clarity
+   - Explain what each step does
+
+4. TROUBLESHOOTING SECTIONS (26-35):
+   - Extract from "Troubleshooting" section
+   - Include problem descriptions and solution steps
+   - Format solutions as clear, actionable paragraphs
+
+EXAMPLE OUTPUT FOR FUNCTIONALITY SECTION:
+
+Home Page Interface:
+
+[Image: Homepage displaying movie cards in a grid layout with movie posters, titles, director names, ratings, and review counts, with BLOCK BUSTER logo at the top]
+
+Upon opening the Movie Review Platform, users are greeted with a modern and visually appealing homepage that displays the movie catalog. At the top of the page, the "BLOCK BUSTER" label functions as a logo, representing the identity of the platform, and is accompanied by navigation buttons for logging in or signing up.
+
+The main page displays movie cards in an attractive grid layout, each showing the movie poster image, movie title, director name, release year, average rating displayed as stars out of 10, number of reviews, and an "Add Review" button. Users can click anywhere on a movie card to view detailed information about that movie, creating an intuitive browsing experience that encourages exploration.
+
+---
+
+EXAMPLE OUTPUT FOR API SECTION:
+
+User Registration (Sign Up):
+
+[Image: Swagger UI showing the POST /users endpoint with request body containing username, email, and password fields]
+
+This endpoint validates the user registration functionality through a POST request to the /users endpoint, demonstrating the API's ability to create new user accounts in the system. The endpoint uses the POST method at the URL http://localhost:3001/users, requires no authentication, and returns a 201 Created status code when successful.
+
+When a user fills out the sign-up form and clicks "SIGN UP", the frontend sends this request to create a new account in the database. The request includes the username, email, and password in JSON format, and the system validates that the username is unique and all fields meet the requirements. Upon successful creation, the endpoint returns the newly created user account information.
+
+---
+
+EXAMPLE OUTPUT FOR SETUP SECTION:
+
+Prerequisites:
+
+[Image: Terminal/command prompt window showing Node.js version check command and version number display]
+
+Before beginning the setup process, you need to have Node.js version 16 or higher installed on your computer. Node.js is a program that allows you to run JavaScript applications, and you can download it from nodejs.org. Additionally, npm (Node Package Manager) comes automatically with Node.js and is a tool that downloads and installs all the code libraries the application needs to work.
+
+To check if you have Node.js installed, open a terminal or command prompt window (on Windows search for "Command Prompt" or "PowerShell", on Mac or Linux search for "Terminal"), then type "node --version" and press Enter. If you see a version number like v18.0.0, you have Node.js installed. If you see an error message, you need to download and install Node.js from nodejs.org before proceeding with the setup.
+
+---
+
+EXAMPLE OUTPUT FOR TROUBLESHOOTING SECTION:
+
+Problem: "Loading movies..." Message Stuck on Screen:
+
+[Image: Browser showing the loading screen with error messages visible in the developer console]
+
+This problem occurs when the frontend is trying to load movies from the backend, but it's not receiving a response. The "Loading movies..." message appears because the application is waiting for data that never arrives, typically indicating that the backend server is not running or cannot be reached.
+
+To solve this issue, first check if the backend is running by looking at your backend terminal window for the message "Application is running on: http://localhost:3001". If you don't see this message, the backend isn't running and you need to start it by navigating to the backend directory in your terminal and typing "npm run start:dev", then waiting for the startup messages to appear. You can also verify the backend is working by opening your web browser and navigating to http://localhost:3001/api, where you should see the Swagger API documentation page. If this page doesn't load, the backend has a problem that needs to be addressed.
+
+---
+
+SPECIFIC INSTRUCTIONS:
+
+1. Read the ENTIRE PROJECT_DOCUMENTATION.md file
+2. Extract content from ALL sections mentioned above
+3. Format each section with: Title, Image placeholder, Paragraph(s)
+4. Maintain the professional, explanatory tone throughout
+5. Convert technical lists and bullet points into flowing paragraph text
+6. For API sections, include all endpoint details (method, URL, status codes, etc.) in paragraph form
+7. For setup sections, convert numbered steps into clear, sequential paragraphs
+8. For troubleshooting sections, combine problem description and solutions into coherent paragraphs
+9. Output in plain text format following the structure above
+10. Ensure consistency in formatting and tone across all sections
