@@ -87,13 +87,6 @@ export class SeederService implements OnModuleInit {
         imageUrl: '/images/ant-man.jpg',
       },
       {
-        title: 'Captain America: Civil War',
-        director: 'Anthony Russo, Joe Russo',
-        releaseYear: 2016,
-        description: 'Political involvement in the Avengers\' affairs causes a rift between Captain America and Iron Man.',
-        imageUrl: '/images/captain-america-civil-war.jpg',
-      },
-      {
         title: 'Spider-Man: Homecoming',
         director: 'Jon Watts',
         releaseYear: 2017,
