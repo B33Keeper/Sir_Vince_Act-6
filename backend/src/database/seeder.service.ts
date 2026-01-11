@@ -15,11 +15,11 @@ export class SeederService implements OnModuleInit {
   }
 
   private async seedMovies(): Promise<void> {
-    // Clear existing movies and reseed (allows updating the movie list)
+    // Only seed if database is empty (preserve existing movies and reviews)
     const existingMovies = await this.movieRepository.count();
     if (existingMovies > 0) {
-      console.log('Clearing existing movies...');
-      await this.movieRepository.clear();
+      console.log(`✅ Database already contains ${existingMovies} movies. Skipping seeding.`);
+      return;
     }
 
     const movies = [

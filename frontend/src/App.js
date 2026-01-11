@@ -182,7 +182,6 @@ function App() {
           </div>
           <nav className="main-nav">
             <div className="nav-right">
-              <a href="#help" className="nav-link" onClick={(e) => { e.preventDefault(); alert('Help section coming soon!'); }}>HELP</a>
               {currentUser ? (
                 <>
                   <span className="nav-link" style={{ color: '#dc1a28' }}>Welcome, {currentUser.username}!</span>
